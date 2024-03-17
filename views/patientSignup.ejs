@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>patientSignup</title>
+
+  <!-- favicon link -->
+  <link rel="stylesheet" href="/imagesfavicon.ico">
+  <!-- font-awesome link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <!-- bootstrap link -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <!-- css file link -->
+  <link rel="stylesheet" href="/css/patientsignup.css">
+  <!-- google fonts links  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Edu+TAS+Beginner:wght@500&family=Merriweather:wght@300&family=Montserrat:wght@100&family=Sacramento&family=Satisfy&display=swap"
+    rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-auth-compat.js"></script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="row1">
+      <div class="logo">
+        <a href="/"><img src="/images/logo.png" alt=""></a>
+      </div>
+      <div class="contact">
+        <h3>Contact</h3>
+      </div>
+      <div class="chat">
+        <a href="article">
+          <h3>Articles</h3>
+        </a>
+      </div>
+      <div class="findDoc">
+        <h3>Find a Doctor</h3>
+      </div>
+      <div class="patientPortal">
+        <a href="patientLogin">
+          <h3>Patient's Portal</h3>
+        </a>
+      </div>
+      <div class="doctorPortal">
+        <a href="doctorLogin">
+          <h3>Doctor's Portal</h3>
+        </a>
+      </div>
+    </div>
+    <div class="row2">
+      <form action="/patientSignup" method="post" class="login-form">
+        <h1 class="title">Register</h1>
+        <div class="login-fields">
+          <div class="login-box">
+            <input type="text" name="name" placeholder="User name" required class="login-input" maxlength="15">
+            <i class="ri-mail-fill"></i>
+          </div>
+          <div class="login-box">
+            <input type="email" name="email" placeholder="E-mail" required class="login-input">
+            <i class="ri-mail-fill"></i>
+          </div>
+
+          <div class="login-box">
+            <input type="password" name="password" placeholder="Password" required class="login-input">
+            <i class="ri-lock-fill"></i>
+          </div>
+          <div class="login-box">
+            <input type="number" name="age" placeholder="Age" required class="login-input" min="18" max="85"
+              maxlength="2" oninput="this.value = this.value.slice(0, 2)"
+              onkeydown="return ['e', 'E', '+', '-'].includes(event.key) ? false : true">
+            <i class="ri-lock-fill"></i>
+          </div>
+          <div class="login-box">
+            <fieldset data-role="controlgroup">
+              <legend>Choose your gender:</legend>
+              <label for="male">Male</label>
+              <input type="radio" name="gender" id="male" value="male" checked>
+              <label for="female">Female</label>
+              <input type="radio" name="gender" id="female" value="female">
+              <label for="other">Other</label>
+              <input type="radio" name="gender" id="other" value="other">
+            </fieldset>
+          </div>
+
+          <button class="login-button" type="submit">
+            <h3 class="loginsubmit">Enter</h3>
+          </button>
+          <div class="separator">
+            <hr class="line">
+          </div>
+          <div class="signup-with-google">
+            <h3>or</h3>
+          <button class="google-button" id="googleSignIn"><img src="/images/google-logo.png" alt="" class="google-logo"></button>
+          </div>
+        </div>
+        <div class="sign-up">
+          <div class="register">
+            <h3>Already have an account?</h3> <a href="patientLogin">
+              <h3>Login</h3>
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('beforeunload', function(event) {
+    // Make an API call to log out the user when the window is closed or unloaded
+    fetch('/logout', {
+        method: 'GET',
+        credentials: 'same-origin' // Send cookies with the request if any
+    })
+    .then(response => {
+        // Handle response
+        console.log('User logged out successfully');
+    })
+    .catch(error => {
+        // Handle error
+        console.error('Error logging out:', error);
+    });
+});
+
+  //google login
+  document.getElementById('googleSignIn').addEventListener('click', function() {
+      // Perform Google sign-in on the client side
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          // Handle successful sign-in
+          console.log('User signed in successfully:', result.user);
+          window.location.href="patientPortal"
+          // Redirect or perform additional actions as needed
+        })
+        .catch((error) => {
+          // Handle errors
+          console.error('Error signing in with Google:', error);
+        });
+  });
+  // Initialize Firebase
+  const firebaseConfig = {
+      apiKey: "AIzaSyCcuvsYlSBbO6-a0TVmIeraeN35ugILYcU",
+      authDomain: "mediconnect-474f0-b3993.firebaseapp.com",
+      projectId: "mediconnect-474f0",
+      storageBucket: "mediconnect-474f0.appspot.com",
+      messagingSenderId: "180297386565",
+      appId: "1:180297386565:web:13036606acddd0c70cb12c",
+      measurementId: "G-48PNZKMZVB"
+  };
+      firebase.initializeApp(firebaseConfig);
+</script>
+</body>
+
+</html>

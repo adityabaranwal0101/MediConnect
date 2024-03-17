@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+    <html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediConnect</title>
+    <!-- Google Fonts Link For Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+    <script src="/js/chat.js" defer></script>
+    <!-- favicon link -->
+    <link rel="stylesheet" href="/images/favicon.ico">
+    <!-- font-awesome link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- bootstrap link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- css file link -->
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/chat.css">
+    <!-- google fonts links  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Edu+TAS+Beginner:wght@500&family=Merriweather:wght@300&family=Montserrat:wght@100&family=Sacramento&family=Satisfy&display=swap"
+        rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <button class="chatbot-toggler">
+        <span class="material-symbols-rounded">mode_comment</span>
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <div class="chatbot">
+        <header>
+          <h2>Mr. Doc</h2>
+          <span class="close-btn material-symbols-outlined">close</span>
+        </header>
+        <ul class="chatbox">
+          <li class="chat incoming">
+            <span class="material-symbols-outlined">smart_toy</span>
+            <p>Hi there 👋<br>How can I help you today?</p>
+          </li>
+        </ul>
+        <div class="chat-input">
+          <textarea placeholder="Enter a message..." spellcheck="false" required></textarea>
+          <span id="send-btn" class="material-symbols-rounded">send</span>
+        </div>
+      </div>
+    <div class="wrapper">
+        <div class="row1">
+            <div class="logo">
+                <a href="/"><img src="/images/logo.png" alt=""></a>
+            </div>
+            <div class="contact">
+                <h3>Contact</h3>
+            </div>
+            <div class="chat-nav">
+                <a href="article"><h3>Article</h3></a>
+            </div>
+            <div class="findDoc">
+                <a href="nearbyfinder"><h3>Find a Doctor</h3></a> 
+            </div>
+            <div class="patientPortal">
+                <a href="patientLogin"><h3>Patient's Portal</h3></a>
+            </div>
+            <div class="doctorPortal">
+                <a href="doctorLogin"><h3>Doctor's Portal</h3></a>
+            </div>
+        </div>
+        <div class="row2">
+            <div class="tag">
+                <h1 class="tagline1">
+                    “Empowering Wellness,
+                </h1>
+                <h1 class="tagline2">
+                    Enriching Lives”
+                </h1>
+            </div>
+        </div>
+        <div class="row3">
+            <div class="search">
+                <h3 class="searchline">Ask Chatbot about</h3>
+                <h3 class="searchline">Diseases and conditions</h3>
+                <hr style="border: black solid;">
+            </div>
+            <div class="articles">
+                <h3 class="articlesline">Read articles</h3>
+                <div id="randomArticles" class="random-articles"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const articles = [
+        "The Importance of Regular Exercise: Exercise not only improves physical health but also boosts mood and cognitive function. Incorporating a mix of cardio, strength training, and flexibility exercises into your routine can lead to a healthier, happier life.",
+
+"Healthy Eating Habits: Adopting a balanced diet rich in fruits, vegetables, lean proteins, and whole grains is key to maintaining optimal health. Limiting processed foods and sugary snacks can reduce the risk of chronic diseases and support overall well-being.",
+
+"Effective Time Management: Prioritizing tasks, setting realistic goals, and minimizing distractions are essential for managing time effectively. By creating a schedule and sticking to it, you can accomplish more and reduce stress in your daily life.",
+
+"The Benefits of Mindfulness: Mindfulness practices, such as meditation and deep breathing exercises, can reduce anxiety, improve focus, and enhance emotional regulation. Taking time to be present in the moment can lead to greater clarity and a sense of inner peace.",
+
+"Financial Planning for the Future: Setting financial goals, creating a budget, and saving for emergencies are crucial steps for achieving long-term financial security. By making informed decisions and planning for the future, you can build a solid foundation for financial success.",
+
+"The Power of Positive Thinking: Cultivating a positive mindset can improve resilience, enhance relationships, and increase overall happiness. By reframing negative thoughts and focusing on gratitude, you can create a more optimistic outlook on life.",
+
+"Stress Management Strategies: Learning to cope with stress is essential for maintaining mental and physical health. Techniques such as deep breathing, exercise, and mindfulness can help reduce stress levels and improve overall well-being.",
+
+"Effective Communication Skills: Clear communication is vital for building strong relationships, both personally and professionally. Active listening, empathy, and assertiveness are key components of effective communication.",
+
+"The Impact of Sleep on Health: Quality sleep is essential for physical and mental health. Poor sleep can lead to increased stress, impaired cognitive function, and a weakened immune system. Establishing a consistent sleep routine and creating a restful environment can promote better sleep.",
+
+"The Art of Decision Making: Making decisions can be challenging, but learning to weigh options, consider consequences, and trust your instincts can lead to better outcomes. By practicing decision-making skills, you can become more confident in your choices.",
+
+"The Value of Lifelong Learning: Continuous learning is essential for personal growth and professional development. Whether through formal education, online courses, or self-study, investing in learning opportunities can open doors to new experiences and opportunities.",
+
+"Building Resilience in Adversity: Resilience is the ability to bounce back from setbacks and overcome challenges. By cultivating a growth mindset, seeking support from others, and finding meaning in adversity, you can build resilience and thrive in the face of adversity.",
+
+"Environmental Conservation: Protecting the planet is everyone's responsibility. By reducing waste, conserving energy, and supporting sustainable practices, individuals can make a positive impact on the environment and preserve natural resources for future generations.",
+
+"The Importance of Self-Care: Prioritizing self-care is essential for maintaining physical, emotional, and mental well-being. Taking time for activities you enjoy, setting boundaries, and practicing self-compassion can prevent burnout and promote overall health.",
+
+"Effective Goal Setting: Setting SMART goals—specific, measurable, achievable, relevant, and time-bound—is key to success. By breaking goals into smaller tasks, tracking progress, and adjusting as needed, you can achieve your aspirations and fulfill your potential.",
+
+"The Role of Nutrition in Health: Proper nutrition is the foundation of good health. Eating a balanced diet rich in vitamins, minerals, and antioxidants supports immune function, energy levels, and overall vitality. Making healthy food choices is essential for long-term well-being.",
+
+"The Science of Happiness: Happiness is more than just a fleeting emotion—it's a state of well-being that can be cultivated through positive habits and mindset shifts. Practicing gratitude, fostering social connections, and pursuing meaningful activities are key components of a fulfilling life.",
+
+"Effective Conflict Resolution: Conflict is a natural part of life, but learning to resolve it constructively is essential for maintaining healthy relationships. Active listening, empathy, and compromise are key skills for navigating conflicts and finding mutually satisfactory solutions.",
+
+"The Benefits of Volunteerism: Giving back to your community through volunteering can have profound benefits for both the giver and the receiver. From improving mental health to building social connections, volunteering fosters a sense of purpose and belonging.",
+
+"The Power of Visualization: Visualizing success can help you achieve your goals by harnessing the mind's creative power. By vividly imagining desired outcomes and taking concrete steps toward them, you can increase motivation, focus, and confidence in your abilities."
+        ];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        const shuffledArticles = shuffleArray(articles).slice(0, 5);
+
+        const articlesContainer = document.getElementById('randomArticles');
+        shuffledArticles.forEach(article => {
+            const [heading, content] = article.split(':'); // Splitting heading and content
+            const articleElement = document.createElement('div');
+            const headingElement = document.createElement('h4'); // Using h4 for heading
+            headingElement.innerHTML = `<u><strong>${heading}</strong></u>`; // Bold and underline
+            const contentElement = document.createElement('p');
+            contentElement.textContent = content.trim(); // Trimmed content to remove extra spaces
+            articleElement.appendChild(headingElement);
+            articleElement.appendChild(contentElement);
+            articlesContainer.appendChild(articleElement);
+        });
+    </script>
+    <script>
+        // Initialize Firebase
+  const firebaseConfig = {
+      apiKey: "AIzaSyCcuvsYlSBbO6-a0TVmIeraeN35ugILYcU",
+      authDomain: "mediconnect-474f0-b3993.firebaseapp.com",
+      projectId: "mediconnect-474f0",
+      storageBucket: "mediconnect-474f0.appspot.com",
+      messagingSenderId: "180297386565",
+      appId: "1:180297386565:web:13036606acddd0c70cb12c",
+      measurementId: "G-48PNZKMZVB"
+  };
+      firebase.initializeApp(firebaseConfig);
+
+    
+        window.addEventListener('beforeunload', function(event) {
+        // Make an API call to log out the user when the window is closed or unloaded
+        fetch('/logout', {
+            method: 'GET',
+            credentials: 'same-origin' // Send cookies with the request if any
+        })
+        .then(response => {
+            // Handle response
+            console.log('User logged out successfully');
+        })
+        .catch(error => {
+            // Handle error
+            console.error('Error logging out:', error);
+        });
+    });
+    </script>
+</body>
+</html>

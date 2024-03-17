@@ -1,0 +1,237 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html,body{
+    width: 100vw;
+    /* height:100vh;    */
+}
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(to left, #f8f8f8, #dcdcdc);
+}
+.wrapper{
+    width: 99%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+} 
+.row1{
+    margin-top: 30px;
+    height: 200px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+}
+.nav-bar{
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 50px;
+}
+.logo{
+    margin-left: 60px;
+    width: 40%;
+    height: 100%;
+}
+.home{
+    width: 12%;
+    height: 100%;
+    text-align: center;
+}
+.btn{
+    margin-bottom: 130px;
+    width: 150px;
+    height: 50px;
+    font-size: 20px;
+    font-family: "Montserrat", sans-serif;
+    font-weight:bold;
+}
+h3{
+    margin-top: 35px;
+    font-size: 18px;
+    font-family: "Montserrat", sans-serif;
+    font-weight:bold;
+}
+a{
+    color: black;
+}
+.row2{
+    width: 90%;
+    height: 1800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    gap: 20px;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+}
+.welcomeTitle{
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+.row3{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 35%;
+    background: linear-gradient(to left, #e6f4ff, #cde8ff);
+    border-radius: 20px;
+    gap: 40px;
+}
+.userInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    height: 90%;
+    background: linear-gradient(to left, #e6f4ff, #cde8ff);
+    border-radius: 20px;
+    gap: 10px;
+}
+.userImg{
+    width: 40%;
+    height: 30%;
+    background: linear-gradient(to left, #f8f8f8, #dcdcdc);
+    border-radius: 50%;
+}
+.userData{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 50%;
+    /* background-color: fuchsia; */
+    border-radius: 20px;
+    gap: 20px;
+}
+.userName{
+    width: 80%;
+    height: 30%;
+    background: linear-gradient(to right, #ffffff, #ffe4e4);
+    border-radius: 400px;
+}
+.ageAndGender{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 30%;
+    background: linear-gradient(to right, #ffffff, #ffe4e4);
+    border-radius: 400px;
+    gap: 20px;
+}
+.age{
+    width: 35%;
+    height: 80%;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+    border-radius: 400px;
+}
+.gender{
+    width: 45%;
+    height: 80%;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+    border-radius: 400px;
+}
+.currentAppoint{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 90%;
+    background: linear-gradient(to left, #e6f4ff, #cde8ff);
+    border-radius: 20px;
+    gap: 20px;
+}
+.currApp1{
+    width: 80%;
+    height: 20%;
+    background: linear-gradient(to right, #f8f8f8, #e2e2e2);
+    border-radius: 40px;
+}
+.currApp2{
+    width: 80%;
+    height: 20%;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+    border-radius: 40px;
+}
+.currApp3{
+    width: 80%;
+    height: 20%;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+    border-radius: 40px;
+}
+.pastAppoint{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 25%;
+    background: linear-gradient(to right, #e6f8ff, #cceeff);
+    border-radius: 20px;
+    gap: 10px;
+}
+.pastApp1{
+    width: 80%;
+    height: 22%;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+    border-radius: 40px;
+}
+.pastApp2{
+    width: 80%;
+    height: 22%;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+    border-radius: 40px;
+}
+.pastApp3{
+    width: 80%;
+    height: 22%;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+    border-radius: 40px;
+}
+.description{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 25%;
+    background: linear-gradient(to right, #f5fff5, #edffed);
+    border-radius: 20px;
+    gap: 20px;
+}
+.slots{
+    width: 80%;
+    height: 22%;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+    border-radius: 40px;
+}
+.specialisation{
+    width: 80%;
+    height: 22%;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+    border-radius: 40px;
+}
+.experience{
+    width: 80%;
+    height: 22%;
+    background: linear-gradient(to right, #f8f8f8, #dcdcdc);
+    border-radius: 40px;
+}
+

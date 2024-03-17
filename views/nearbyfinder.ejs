@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon link -->
+    <link rel="stylesheet" href="/images/favicon.ico">
+    <title>OpenStreetMap Example</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        #input-boxes {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        #places-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #places-table th, #places-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #places-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div id="input-boxes">
+        <div>
+            <label for="address">Address:</label>
+            <input type="text" id="address" placeholder="Enter address">
+        </div>
+        <div>
+            <label for="landmark">Landmark:</label>
+            <select id="landmark">
+                <option value="hospital">Hospital</option>
+                <option value="medical_center">Medical Center</option>
+                <option value="doctor_office">Doctor's Office</option>
+                <option value="pharmacy">Pharmacy/Medical Shop</option>
+                <option value="rehabilitation_center">Rehabilitation Center</option>
+                <option value="emergency_room">Emergency Room</option>
+                <option value="clinic">Medical Clinic</option>
+                <option value="urgent_care_center">Urgent Care Center</option>
+                <option value="diagnostic_center">Diagnostic Center</option>
+                <option value="wellness_center">Wellness Center</option>
+                <option value="dentist_office">Dentist's Office</option>
+                <option value="optometrist_office">Optometrist's Office</option>
+                <option value="pharmacy">Pharmacy</option>
+                <option value="drugstore">Drugstore</option>
+                <option value="medical_supply_store">Medical Supply Store</option>
+                <!-- Add more landmark options as needed -->
+            </select>
+        </div>
+        <button onclick="updateMap()">Update Map</button>
+    </div>
+
+    <div id="map"></div>
+
+    <table id="places-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+            </tr>
+        </thead>
+        <tbody id="places-list"></tbody>
+    </table>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        let map;
+        let placesList = document.getElementById('places-list');
+        let markers = [];
+
+        function initMap() {
+            map = L.map('map').setView([0, 0], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            updateMap(); // Initially update the map with default values
+        }
+
+        function updateMap() {
+            const address = document.getElementById('address').value;
+            const landmark = document.getElementById('landmark').value;
+
+            if (address.trim() === "") {
+                // If no address is provided, use current location
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const currentLatitude = position.coords.latitude;
+                        const currentLongitude = position.coords.longitude;
+
+                        map.setView([currentLatitude, currentLongitude], 13);
+                        clearMarkers();
+                        fetchNearbyPlaces(currentLatitude, currentLongitude, landmark);
+                    },
+                    function (error) {
+                        console.error('Error getting current location:', error);
+                    }
+                );
+            } else {
+                // If an address is provided, convert it to coordinates
+                fetchCoordinatesAndPlaces(address, landmark);
+            }
+        }
+
+        function fetchCoordinatesAndPlaces(address, landmark) {
+            const geocodingApiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+            fetch(geocodingApiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const latitude = data[0].lat;
+                        const longitude = data[0].lon;
+
+                        map.setView([latitude, longitude], 13);
+                        clearMarkers();
+                        fetchNearbyPlaces(latitude, longitude, landmark);
+                    } else {
+                        console.error('No coordinates found for the provided address.');
+                    }
+                })
+                .catch(error => console.error('Error fetching coordinates:', error));
+        }
+
+        function clearMarkers() {
+            markers.forEach(marker => marker.remove());
+            markers = [];
+        }
+
+        function fetchNearbyPlaces(latitude, longitude, type) {
+            const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&bounded=1&q=${type}&viewbox=${longitude - 0.1},${latitude - 0.1},${longitude + 0.1},${latitude + 0.1}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    placesList.innerHTML = ''; // Clear the table
+                    clearMarkers();
+
+                    if (Array.isArray(data)) {
+                        data.forEach(place => {
+                            // Split the display_name into name and address parts
+                            const [name, ...addressParts] = place.display_name.split(', ');
+                            const fullAddress = addressParts.join(', ');
+
+                            // Add a row to the table
+                            const row = placesList.insertRow();
+                            row.insertCell(0).innerText = name;
+                            row.insertCell(1).innerText = fullAddress || 'N/A';
+
+                            // Create a marker and bind it to the address for hover effect
+                            const marker = L.marker([place.lat, place.lon]).addTo(map);
+                            marker.bindPopup(`<b>${place.display_name}</b><br>${place.address}`);
+                            markers.push(marker);
+
+                            // Add event listeners for hover effect
+                            row.addEventListener('mouseover', () => marker.openPopup());
+                            row.addEventListener('mouseout', () => marker.closePopup());
+                        });
+                    } else {
+                        console.error('Invalid data format. Expected an array.');
+                    }
+                })
+                .catch(error => console.error('Error fetching places:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            initMap();
+        });
+        window.addEventListener('beforeunload', function(event) {
+        // Make an API call to log out the user when the window is closed or unloaded
+        fetch('/logout', {
+            method: 'GET',
+            credentials: 'same-origin' // Send cookies with the request if any
+        })
+        .then(response => {
+            // Handle response
+            console.log('User logged out successfully');
+        })
+        .catch(error => {
+            // Handle error
+            console.error('Error logging out:', error);
+        });
+    });
+    </script>
+</body>
+</html>
