@@ -63,14 +63,14 @@
 
                     </div>
                     <div class="userData">
-                        <div  id ="name"class="userName">
+                        <div class="userName">
 
                         </div>
-                        <div   class="ageAndGender">
-                            <div id="age" class="age">
+                        <div class="ageAndGender">
+                            <div class="age">
 
                             </div>
-                            <div id="gender" class="gender">
+                            <div class="gender">
 
                             </div>
                         </div>
@@ -145,7 +145,6 @@
             </div>
         </div>
     </div>
-    <button onclick="videoCall()" type="button" class="btn btn-success">videoCall</button>
     <button onclick="getCurrentUserUid()">Get User UID</button>
     <p id="userUid"></p>
 </body>
@@ -190,46 +189,9 @@ auth.onAuthStateChanged(function(user) {
       console.log("No user is currently logged in.");
     }
   }
-  function videoCall(){
-    window.location.href="video";
-  }
 </script>
 
 <script>
-
-async function fetchUserData() {
-      const token = sessionStorage.getItem('token');
-
-      if (!token) {
-        console.error('Token not found in local storage');
-        return;
-      }
-
-      try {
-        const response = await fetch('/loggedpatient', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (response.ok) {
-          const userData = await response.json();
-          // Display user data in the UI
-          console.log(userData);
-          document.getElementById('name').innerHTML+=userData.user.name;
-          document.getElementById('age').innerHTML+=userData.user.age;
-          document.getElementById('gender').innerHTML+=userData.user.gender;
-        } else {
-          console.error('Failed to fetch user data:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error during user data fetch:', error.message);
-      }
-    }
-
-    // Call fetchUserData function when the page loads
-    window.onload = fetchUserData;
     document.getElementById('logoutBtn').addEventListener('click', function() {
         fetch('/logout')
             .then(response => {
