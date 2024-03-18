@@ -3,14 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- favicon link -->
-    <link rel="stylesheet" href="/images/favicon.ico">
-    <title>OpenStreetMap Example</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Mapbox Example</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
     <style>
         #map {
             height: 400px;
             margin-bottom: 20px;
+        }
+
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        nav div {
+            display: flex;
+            align-items: center;
+        }
+
+        nav button {
+            margin-right: 10px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
         }
 
         #input-boxes {
@@ -29,6 +55,7 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            cursor: pointer;
         }
 
         #places-table th {
@@ -37,7 +64,7 @@
     </style>
 </head>
 <body>
-    <div id="input-boxes">
+    <nav>
         <div>
             <label for="address">Address:</label>
             <input type="text" id="address" placeholder="Enter address">
@@ -47,24 +74,12 @@
             <select id="landmark">
                 <option value="hospital">Hospital</option>
                 <option value="medical_center">Medical Center</option>
-                <option value="doctor_office">Doctor's Office</option>
-                <option value="pharmacy">Pharmacy/Medical Shop</option>
-                <option value="rehabilitation_center">Rehabilitation Center</option>
-                <option value="emergency_room">Emergency Room</option>
-                <option value="clinic">Medical Clinic</option>
-                <option value="urgent_care_center">Urgent Care Center</option>
-                <option value="diagnostic_center">Diagnostic Center</option>
-                <option value="wellness_center">Wellness Center</option>
-                <option value="dentist_office">Dentist's Office</option>
-                <option value="optometrist_office">Optometrist's Office</option>
-                <option value="pharmacy">Pharmacy</option>
-                <option value="drugstore">Drugstore</option>
-                <option value="medical_supply_store">Medical Supply Store</option>
+                <option value="doctor">Doctor's Office</option>
                 <!-- Add more landmark options as needed -->
             </select>
         </div>
         <button onclick="updateMap()">Update Map</button>
-    </div>
+    </nav>
 
     <div id="map"></div>
 
@@ -73,26 +88,19 @@
             <tr>
                 <th>Name</th>
                 <th>Address</th>
+                <th>Distance (km)</th>
             </tr>
         </thead>
         <tbody id="places-list"></tbody>
     </table>
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
     <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYWRpdHlhYmFyYW53YWwiLCJhIjoiY2x0dHprb3o5MGVpYTJwb3VnNW1keWM2YiJ9.-Vh7H3Sw12q97IJwZ2N8Cw'; // Replace with your Mapbox access token
+
         let map;
         let placesList = document.getElementById('places-list');
         let markers = [];
-
-        function initMap() {
-            map = L.map('map').setView([0, 0], 13);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
-
-            updateMap(); // Initially update the map with default values
-        }
 
         function updateMap() {
             const address = document.getElementById('address').value;
@@ -105,9 +113,10 @@
                         const currentLatitude = position.coords.latitude;
                         const currentLongitude = position.coords.longitude;
 
-                        map.setView([currentLatitude, currentLongitude], 13);
+                        map.setCenter([currentLongitude, currentLatitude]);
+                        map.setZoom(15); // Adjust the default zoom level
                         clearMarkers();
-                        fetchNearbyPlaces(currentLatitude, currentLongitude, landmark);
+                        fetchPlaces(currentLatitude, currentLongitude, landmark);
                     },
                     function (error) {
                         console.error('Error getting current location:', error);
@@ -120,18 +129,18 @@
         }
 
         function fetchCoordinatesAndPlaces(address, landmark) {
-            const geocodingApiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+            const geocodingApiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
 
             fetch(geocodingApiUrl)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.length > 0) {
-                        const latitude = data[0].lat;
-                        const longitude = data[0].lon;
+                    if (data.features.length > 0) {
+                        const coordinates = data.features[0].center;
 
-                        map.setView([latitude, longitude], 13);
+                        map.setCenter(coordinates);
+                        map.setZoom(15); // Adjust the default zoom level
                         clearMarkers();
-                        fetchNearbyPlaces(latitude, longitude, landmark);
+                        fetchPlaces(coordinates[1], coordinates[0], landmark);
                     } else {
                         console.error('No coordinates found for the provided address.');
                     }
@@ -144,60 +153,88 @@
             markers = [];
         }
 
-        function fetchNearbyPlaces(latitude, longitude, type) {
-            const apiUrl = `https://nominatim.openstreetmap.org/search?format=json&bounded=1&q=${type}&viewbox=${longitude - 0.1},${latitude - 0.1},${longitude + 0.1},${latitude + 0.1}`;
+        function fetchPlaces(latitude, longitude, landmark) {
+            const apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(landmark)}.json?proximity=${longitude},${latitude}&limit=50&access_token=${mapboxgl.accessToken}`;
 
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
-                    placesList.innerHTML = ''; // Clear the table
+                    console.log('Data:', data); // Log the fetched data
                     clearMarkers();
+                    placesList.innerHTML = ''; // Clear the table
 
-                    if (Array.isArray(data)) {
-                        data.forEach(place => {
-                            // Split the display_name into name and address parts
-                            const [name, ...addressParts] = place.display_name.split(', ');
-                            const fullAddress = addressParts.join(', ');
+                    if (data.features && data.features.length > 0) {
+                        data.features.forEach(place => {
+                            const placeLongitude = place.center[0];
+                            const placeLatitude = place.center[1];
 
-                            // Add a row to the table
-                            const row = placesList.insertRow();
-                            row.insertCell(0).innerText = name;
-                            row.insertCell(1).innerText = fullAddress || 'N/A';
+                            // Calculate distance between current location and place
+                            const distance = calculateDistance(latitude, longitude, placeLatitude, placeLongitude);
 
-                            // Create a marker and bind it to the address for hover effect
-                            const marker = L.marker([place.lat, place.lon]).addTo(map);
-                            marker.bindPopup(`<b>${place.display_name}</b><br>${place.address}`);
-                            markers.push(marker);
+                            // Check if the place is within the 20 km radius
+                            if (distance <= 20) {
+                                // Add a row to the table
+                                const row = placesList.insertRow();
+                                row.insertCell(0).innerText = place.text;
+                                row.insertCell(1).innerText = place.properties.address || 'N/A';
+                                row.insertCell(2).innerText = distance.toFixed(2); // Display distance with two decimal places
 
-                            // Add event listeners for hover effect
-                            row.addEventListener('mouseover', () => marker.openPopup());
-                            row.addEventListener('mouseout', () => marker.closePopup());
+                                // Create a marker and bind it to the address for hover effect
+                                const marker = new mapboxgl.Marker()
+                                    .setLngLat(place.center)
+                                    .setPopup(new mapboxgl.Popup().setHTML(`<b>${place.text}</b><br>${place.properties.address}`))
+                                    .addTo(map);
+                                markers.push(marker);
+
+                                // Add event listeners for hover effect
+                                row.addEventListener('mouseover', () => {
+                                    marker.togglePopup();
+                                    map.flyTo({
+                                        center: place.center,
+                                        essential: true // this animation is considered essential with respect to prefers-reduced-motion
+                                    });
+                                });
+                                row.addEventListener('mouseout', () => marker.togglePopup());
+                            }
                         });
                     } else {
-                        console.error('Invalid data format. Expected an array.');
+                        console.error('No places found.');
                     }
                 })
                 .catch(error => console.error('Error fetching places:', error));
         }
 
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of the Earth in kilometers
+            const dLat = deg2rad(lat2 - lat1);
+            const dLon = deg2rad(lon2 - lon1);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = R * c; // Distance in kilometers
+            return distance;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180);
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
-            initMap();
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: [0, 0], // Default center
+                zoom: 15 // Adjust the default zoom level
+            });
+
+            // Initialize map with default values
+            updateMap();
+
+            // Add event listener to update map when address changes
+            document.getElementById('address').addEventListener('change', updateMap);
         });
-        window.addEventListener('beforeunload', function(event) {
-        // Make an API call to log out the user when the window is closed or unloaded
-        fetch('/logout', {
-            method: 'GET',
-            credentials: 'same-origin' // Send cookies with the request if any
-        })
-        .then(response => {
-            // Handle response
-            console.log('User logged out successfully');
-        })
-        .catch(error => {
-            // Handle error
-            console.error('Error logging out:', error);
-        });
-    });
     </script>
 </body>
 </html>
