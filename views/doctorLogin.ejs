@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="row2">
-            <form action="" id="loginForm" method="post" class="login-form">
+            <form action="/doctorLogin" method="post" class="login-form">
                 <h1 class="title">Login</h1>
                 <div class="login-fields">
                   <!-- <div class="login-box">
@@ -126,39 +126,7 @@
       measurementId: "G-48PNZKMZVB"
   };
       firebase.initializeApp(firebaseConfig);
-      document.getElementById('loginForm').addEventListener('submit', async (event) => {
-      event.preventDefault(); // Prevent form submission
 
-      const formData = new FormData(event.target); // Get form data
-      const email = formData.get('email');
-      const password = formData.get('password');
-      
-      try {
-        const response = await fetch('/doctorLogin', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email, password })
-        });
-
-        const responseData = await response.json();
-        console.log(responseData);
-        if (response.ok) {
-          // Store token in local storage
-          sessionStorage.setItem('token', responseData.token);
-          console.log(sessionStorage.getItem('token'));
-          // Redirect or update UI as needed
-          window.location.href='doctorPortal';
-        } else {
-          console.error('Login failed:', responseData.message);
-          // Display error message to the user
-        }
-      } catch (error) {
-        console.error('Error during login:', error.message);
-        // Handle any network or server errors
-      }
-    });
   </script>
 </body>
 </html>
