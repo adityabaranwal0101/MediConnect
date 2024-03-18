@@ -1,5 +1,5 @@
 import {patientModel,doctorModel} from '../models/User.js'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import transporter from '../config/emailConfig.js'
 
@@ -90,6 +90,15 @@ static doctorIndex = async(req,res) =>{
 };
 
 
+static video_call=async(req,res)=>{
+  try {
+    res.render('video');
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+}
+
+
   static patientSignupPost = async (req, res) => {
     const { name, email, password, age, gender } = req.body
     const user = await patientModel.findOne({ email: email })
@@ -167,8 +176,8 @@ static doctorIndex = async(req,res) =>{
           if ((user.email === email) && isMatch) {
             // Generate JWT Token
             const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '5d' })
-            res.render('patientPortal');
-            // res.send({ "status": "success", "message": "Login Success", "token": token })
+            //res.render('patientPortal');
+             res.send({ "status": "success", "message": "Login Success", "token": token })
           } else {
             res.send({ "status": "failed", "message": "Email or Password is not Valid" })
           }
@@ -194,8 +203,8 @@ static doctorIndex = async(req,res) =>{
           if ((user.email === email) && isMatch) {
             // Generate JWT Token
             const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '5d' })
-            res.render('doctorPortal');
-            // res.send({ "status": "success", "message": "Login Success", "token": token })
+            //res.render('doctorPortal');
+             res.send({ "status": "success", "message": "Login Success", "token": token })
           } else {
             res.send({ "status": "failed", "message": "Email or Password is not Valid" })
           }
@@ -228,6 +237,7 @@ static doctorIndex = async(req,res) =>{
   // }
 
   static loggedpatient = async (req, res) => {
+    console.log(req.user);
     res.send({ "user": req.user })
   }
   static loggeddoctor = async (req, res) => {

@@ -5,8 +5,8 @@ import {checkpatientAuth,checkdoctorAuth} from '../middlewares/auth-middleware.j
 
 // ROute Level Middleware - To Protect Route
 // router.use('/changepassword', checkUserAuth)
-router.use('/loggeddoctor', checkpatientAuth)
-router.use('/loggedpatient', checkdoctorAuth)
+router.use('/loggedpatient', checkpatientAuth)
+router.use('/loggeddoctor', checkdoctorAuth)
 
 // // Public Routes
 // router.post('/register', userController.userRegistration)
@@ -34,6 +34,7 @@ router.post('/patientSignup',userController.patientSignupPost);
 router.post('/doctorSignup',userController.doctorSignupPost);
 router.post('/patientLogin',userController.patientLoginPost);
 router.post('/doctorLogin',userController.doctorLoginPost);
+router.get('/video',userController.video_call);
 // router.get('/logout',userController.logout);
 
 
