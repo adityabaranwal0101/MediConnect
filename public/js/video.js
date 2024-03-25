@@ -1,5 +1,7 @@
-var socket=io();
 
+
+
+const socket = io('http://localhost:3000');
 
 
 var videoChatForm=document.getElementById('video-chat-form');
