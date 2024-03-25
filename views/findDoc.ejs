@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediConnect</title>
+    <!-- Google Fonts Link For Icons -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+    <!-- favicon link -->
+    <link rel="stylesheet" href="favicon.ico">
+    <!-- font-awesome link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- bootstrap link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- css file link -->
+    <link rel="stylesheet" href="/css/findDoc.css">
+    <!-- google fonts links  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Edu+TAS+Beginner:wght@500&family=Merriweather:wght@300&family=Montserrat:wght@100&family=Sacramento&family=Satisfy&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="row1">
+            <div class="logo">
+                <a href="index"><img src="/images/logo.png" alt=""></a>
+            </div>
+            <div class="contact">
+                <h3>Contact</h3>
+            </div>
+            <div class="chat-nav">
+                <a href="article">
+                    <h3>Articles</h3>
+                </a>
+            </div>
+            <div class="findDoc">
+                <a href="findDoc">
+                    <h3>Find a Doctor</h3>
+                </a>
+            </div>
+            <div class="patientPortal">
+                <a href="patientlogin">
+                    <h3>Patient's Portal</h3>
+                </a>
+            </div>
+            <div class="doctorPortal">
+                <a href="doctorlogin">
+                    <h3>Doctor's Portal</h3>
+                </a>
+            </div>
+        </div>
+        <div class="row2">
+            <div class="find">
+                <div class="top">
+                    <h1 class="title">Search doctors with speciality</h1>
+                </div>
+                <div id="search-form">
+                    <input type="text" id="search-input" placeholder="Enter speciality">
+                    <i class="fa-solid fa-magnifying-glass" type="button" onclick="addDoc()"></i>
+                </div>
+            </div>
+            <div id="docList">
+                <div class="doctor">
+                    <div id="docName" class="docName">
+                         
+                    </div>
+                    <div id="docSlot" class="docSlot">
+
+                    </div>
+                    <div class="appointmentBtn" id="bookAppointment">
+                        <button type="button"  onclick="bookAppointment()" class="btn btn-success"><h3>Book Appointment</h3></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/findDoc.js"></script>
+</body>
+</html>

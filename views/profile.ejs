@@ -4,21 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor's Portal</title>
+    <title>Patient's Portal</title>
     <!-- Google Fonts Link For Icons -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
     <!-- favicon link -->
-    <link rel="stylesheet" href="/images/favicon.ico">
+    <link rel="stylesheet" href="favicon.ico">
     <!-- font-awesome link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- bootstrap link -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- css file link -->
-    <link rel="stylesheet" href="/css/doctorPortal.css">
+    <link rel="stylesheet" href="/css/patientPortal.css">
     <!-- google fonts links  -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +29,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    
+        <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-firestore-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-auth-compat.js"></script>
 </head>
 
 <body>
@@ -40,7 +42,7 @@
             </div>
             <div class="nav-bar">
                 <div class="home">
-                    <a href="doctorIndex">
+                    <a href="patientIndex">
                         <h3>Home</h3>
                     </a>
                 </div>
@@ -61,17 +63,14 @@
 
                     </div>
                     <div class="userData">
-                        <div id="name"  class="userName">
+                        <div class="userName">
 
                         </div>
                         <div class="ageAndGender">
-                            <div id="age" class="age">
+                            <div class="age">
 
                             </div>
-                            <div id="gender" class="gender">
-
-                            </div>
-                            <div id="specialization" class="specialization">
+                            <div class="gender">
 
                             </div>
                         </div>
@@ -106,31 +105,48 @@
 
                 </div>
             </div>
-            <div class="description">
-                <div class="titledescription">
-                    <h3 class="titledescription">Description</h3>
+            <div class="healthRecords">
+                <div class="titleHealthRecords">
+                    <h3 class="titleHealthRecords">Health Records</h3>
                 </div>
-                <div class="slots">
-                    <h3>Available Slots:</h3>
-                </div>
-                <div class="specialisation">
-                    <h3>Specialisation:</h3>
-                </div>
-                <div class="experience">
-                    <h3>Experience:</h3>
-                </div>
+                <table>
+                    <tr>
+                        <th>Past Diseases/Allergies</th>
+                        <th>Medical Course</th>
+                        <th>Medical Course Duration</th>
+                        <th>Doctor's Notes</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
                 
             </div>
         </div>
     </div>
-    <button onclick="videoCall()" type="button" class="btn btn-success">videoCall</button>
 </body>
-
-</html>
 <script>
-    function videoCall(){
-    window.location.href="video";
-    }
     document.getElementById('logoutBtn').addEventListener('click', function() {
         fetch('/logout')
             .then(response => {
@@ -141,57 +157,47 @@
                 console.error('Error fetching profile:', error);
             });
     });
-</script>
-<script>
-
-async function fetchUserData() {
-      const token = sessionStorage.getItem('token');
-
-      if (!token) {
-        console.error('Token not found in local storage');
-        return;
-      }
-
-      try {
-        const response = await fetch('/loggeddoctor', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (response.ok) {
-          const userData = await response.json();
-          // Display user data in the UI
-          console.log(userData);
-          document.getElementById('name').innerHTML+=userData.user.name;
-          document.getElementById('age').innerHTML+=userData.user.age;
-          document.getElementById('gender').innerHTML+=userData.user.gender;
-          document.getElementById('specialization').innerHTML+=userData.user.specialization;
-        } else {
-          console.error('Failed to fetch user data:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error during user data fetch:', error.message);p
-      }
-    }
-
-    // Call fetchUserData function when the page loads
-    window.onload = fetchUserData;
-    window.addEventListener('beforeunload', function(event) {
-    // Make an API call to log out the user when the window is closed or unloaded
-    fetch('/logout', {
-        method: 'GET',
-        credentials: 'same-origin' // Send cookies with the request if any
-    })
-    .then(response => {
-        // Handle response
-        console.log('User logged out successfully');
-    })
-    .catch(error => {
-        // Handle error
-        console.error('Error logging out:', error);
-    });
     
-});
+
+//     const firebaseConfig = {
+//       apiKey: "AIzaSyCcuvsYlSBbO6-a0TVmIeraeN35ugILYcU",
+//       authDomain: "mediconnect-474f0-b3993.firebaseapp.com",
+//       projectId: "mediconnect-474f0",
+//       storageBucket: "mediconnect-474f0.appspot.com",
+//       messagingSenderId: "180297386565",
+//       appId: "1:180297386565:web:13036606acddd0c70cb12c",
+//       measurementId: "G-48PNZKMZVB"
+//   };
+//       firebase.initializeApp(firebaseConfig);
+
+//       // Initialize Firebase
+//       firebase.initializeApp(firebaseConfig);
+
+// Listen for authentication state changes
+// firebase.auth().onAuthStateChanged(user => {
+//     if (user) {
+//         // User is signed in, retrieve user data
+//         const userId = user.uid;
+//         const userRef = firebase.database().ref(`users/${userId}`);
+//         userRef.once('value', snapshot => {
+//             const userData = snapshot.val();
+//             // Display user data on the profile page
+//             displayProfileData(userData);
+//         });
+//     } else {
+//         // User is signed out, redirect to login page
+//         window.location.href = '/';
+//     }
+// });
+
+// function displayProfileData(userData) {
+//     // Display user data in the profile page elements
+//     document.querySelector('.userName').innerText = userData.name;
+//     document.querySelector('.age').innerText = userData.age;
+//     document.querySelector('.gender').innerText = userData.gender;
+//     // Update other profile data elements as needed
+// }
 </script>
+
+
+</html>
