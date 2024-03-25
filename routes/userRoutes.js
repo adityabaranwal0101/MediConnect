@@ -7,7 +7,8 @@ import {checkpatientAuth,checkdoctorAuth} from '../middlewares/auth-middleware.j
 // router.use('/changepassword', checkUserAuth)
 router.use('/loggedpatient', checkpatientAuth)
 router.use('/loggeddoctor', checkdoctorAuth)
-
+router.use('/bookAppointment',checkpatientAuth)
+router.use('/findDoctor',checkpatientAuth)
 // // Public Routes
 // router.post('/register', userController.userRegistration)
 // router.post('/login', userController.userLogin)
@@ -18,6 +19,7 @@ router.use('/loggeddoctor', checkdoctorAuth)
 // router.post('/changepassword', userController.changeUserPassword)
 router.get('/loggedpatient', userController.loggedpatient)
 router.get('/loggeddoctor', userController.loggeddoctor)
+
 
 router.get('/',userController.loadIndex);
 router.get('/patientSignup',userController.patientSignup);
@@ -30,10 +32,13 @@ router.get('/doctorPortal',userController.doctorPortal);
 router.get('/patientPortal',userController.patientPortal);
 router.get('/doctorIndex',userController.doctorIndex);
 router.get('/patientIndex',userController.patientIndex);
+router.get('/findDoc',userController.findDoc);
 router.post('/patientSignup',userController.patientSignupPost);
 router.post('/doctorSignup',userController.doctorSignupPost);
 router.post('/patientLogin',userController.patientLoginPost);
 router.post('/doctorLogin',userController.doctorLoginPost);
+router.post('/bookAppointment',userController.bookAppointment);
+router.post('/findDoctor',userController.findDoctor);
 router.get('/video',userController.video_call);
 // router.get('/logout',userController.logout);
 
