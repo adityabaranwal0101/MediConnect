@@ -199,7 +199,7 @@ auth.onAuthStateChanged(function(user) {
 
 async function fetchUserData() {
       const token = sessionStorage.getItem('token');
-
+      console.log(token);
       if (!token) {
         console.error('Token not found in local storage');
         return;
