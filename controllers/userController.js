@@ -125,7 +125,7 @@ static video_call=async(req,res)=>{
           await doc.save()
           const saved_user = await patientModel.findOne({ email: email })
           // Generate JWT Token
-          const token = jwt.sign({ userID: saved_user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '5d' })
+          //const token = jwt.sign({ userID: saved_user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '5d' })
           console.log(doc);
           res.render('patientLogin');
           // res.status(201).send({ "status": "success", "message": "Registration Success", "token": token })
@@ -159,7 +159,7 @@ static video_call=async(req,res)=>{
           await doc.save()
           const saved_user = await doctorModel.findOne({ email: email })
           // Generate JWT Token
-          const token = jwt.sign({ userID: saved_user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '5d' })
+         // const token = jwt.sign({ userID: saved_user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '5d' })
           res.render('doctorLogin');
           // res.status(201).send({ "status": "success", "message": "Registration Success", "token": token })
         } catch (error) {
